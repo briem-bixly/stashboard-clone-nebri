@@ -1,0 +1,20 @@
+<polymer-element name="stashboard-stat-display" extends="nebrios-element">
+    <template>
+        <h2>StashBoard Clone Stats</h2>
+        <template repeat="{{service in services}}">
+            {{service.service.name}} - {{service.service.current_status}}<br>
+        </template>
+        <nebrios-ajax id="get_services_statuses" auto="true"
+            url="/api/v1/stashboard/form_get_services_statuses"
+            on-response="{{onResponse}}">
+        </nebrios-ajax>
+    </template>
+    <script>
+        Polymer("stashboard-stat-display", {
+            onResponse: function(event, response) {
+                this.services = response.response;
+                console.log(this.services);
+            }
+        });
+    </script>
+</polymer-element>

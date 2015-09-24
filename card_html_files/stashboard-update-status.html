@@ -1,0 +1,21 @@
+<polymer-element name="stashboard-update-status" extends="nebrios-form" target="stashboard.form_update_status">
+    <template>
+        <h2>Set Stashboard Clone Service Status</h2>
+        <nebrios-select id="service" label="Service" options="{{services}}"></nebrios-select>
+        <nebrios-string id="status" label="Service Status" required="true"></nebrios-string>
+        <nebrios-string id="description" label="Service Status Description"></nebrios-string>
+        <nebrios-ajax id="load_options" auto="true"
+            url="/api/v1/stashboard/form_get_services_options"
+            on-response="{{onResponse}}">
+        </nebrios-ajax>
+    </template>
+    <script>
+        Polymer("stashboard-update-status", {
+            services: [],
+            onResponse: function(event, response) {
+                this.services = response.response;
+                this.$.service.setupOptions();
+            }    
+        });
+    </script>
+</polymer-element>

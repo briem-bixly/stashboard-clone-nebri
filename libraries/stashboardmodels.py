@@ -20,6 +20,13 @@ class Service(NebriOSModel):
                 # make sure to make your dates JSON serializable
                 'date_added': self.date_added.isoformat(),
                 'current_status': self.current_status()}
+                
+    def is_url(self):
+        try:
+            requests.get(self.name)
+            return True
+        except:
+            return False
 
 
 class ServiceStatus(NebriOSModel):

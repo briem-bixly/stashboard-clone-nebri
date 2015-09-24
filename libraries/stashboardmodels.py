@@ -28,6 +28,7 @@ class ServiceStatus(NebriOSModel):
     running = NebriOSField(required=True, default=True)
     description = NebriOSField()
     date_added = NebriOSField(required=True)
+    alerted = NebriOSField(required=True, default=False)
 
     def get_json(self):
         return {'status': self.status_string,

@@ -4,26 +4,27 @@ import logging
 logging.basicConfig(filename='stashboard.log', level=logging.DEBUG)
 
 
-def get_info(service=None):
-    logging.debug('get info')
+def get_info(service=None, display=False):
     if service is None:
         # get info for all services
         return_data = []
         services = Service.filter()
         for service in services:
-            statuses = ServiceStatus.filter(service=service)
             data = {'service': service.get_json(), 'statuses': []}
-            for s in statuses:
-                data['statuses'].append(s.get_json())
+            if display:
+                data['statuses'] = service.get_last_4_days()
+            else:
+                statuses = ServiceStatus.filter(service=service)
+                for s in statuses:
+                    data['statuses'].append(s.get_json())
             return_data.append(data)
-        logging.debug(return_data)
         return return_data
     else:
         service = Service.get(name=service)
         statuses = ServiceStatus.filter(service=service)
         return_data = {'service': service.get_json(), 'statuses': []}
         for s in statuses:
-            return_data['service']['statuses'].append(s.get_json())
+            return_data['statuses'].append(s.get_json())
         return return_data
 
 
@@ -37,14 +38,16 @@ def set_status(data):
                 service=service,
                 date_added=datetime.now(),
                 description=data.get('description', ''),
-                status=data['status']
+                running=data['running'],
+                status_string=data['status_string']
             )
         except:
             status = ServiceStatus(
                 service=service,
                 date_added=datetime.now(),
                 description=data.description,
-                status=data.status
+                running=data.running,
+                status_string=data.status_string
             )
         status.save()
         return 'Successfully Created'

@@ -2,10 +2,14 @@
     <template>
         <h2>StashBoard Clone Stats</h2>
         <template repeat="{{service in services}}">
-            {{service.service.name}} - {{service.service.current_status}}<br>
+            {{service.service.name}} : {{service.service.current_status}}
+            <template repeat="{{status in service.statuses}}">
+                  <br>{{status.date}} - {{status.message}}
+            </template><br><br>
         </template>
+        <paper-button on-click="{{ getAllServiceStatuses }}">Refresh Statuses</paper-button>
         <nebrios-ajax id="get_services_statuses" auto="true"
-            url="/api/v1/stashboard/form_get_services_statuses"
+            url="/api/v1/stashboard/form_get_last4_statuses"
             on-response="{{onResponse}}">
         </nebrios-ajax>
     </template>
@@ -14,6 +18,9 @@
             onResponse: function(event, response) {
                 this.services = response.response;
                 console.log(this.services);
+            },
+            getAllServiceStatuses: function() {
+                this.$.get_services_statuses.go();rt
             }
         });
     </script>

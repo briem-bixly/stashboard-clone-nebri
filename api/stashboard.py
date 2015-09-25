@@ -71,6 +71,10 @@ def get_service_status_history(request):
     return get_info(service=service)
 
 
+def test(request):
+    return {'lol': 'foo'}
+
+
 def form_get_service_status_history(request):
     try:
         if request.is_authenticated:
@@ -90,6 +94,16 @@ def form_get_services_statuses(request):
     try:
         if request.is_authenticated:
             return get_info()
+        else:
+            return HttpResponseForbidden
+    except:
+        return HttpResponseBadRequest
+
+
+def form_get_last4_statuses(request):
+    try:
+        if request.is_authenticated:
+            return get_info(service=None, display=True)
         else:
             return HttpResponseForbidden
     except:
